@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const config = {
   mode: "development",
-  entry: "./tetris.tsx",
+  entry: "./tetris.ts",
   output: { filename: "js/[fullhash].js", path: __dirname + "/public" },
   devtool: "source-map",
   module: {
