@@ -1,4 +1,4 @@
-            let tiles = [];
+            let tiles: HTMLElement[][] = [];
             for (let y=0; y<22; ++y) {
                 tiles.push([]);
                 let row = document.createElement("div");
@@ -16,6 +16,12 @@
             }
             let t = 0;
 
+            let scoreboard: HTMLElement = document.createElement("div");
+            document.body.appendChild(scoreboard);
+
+            let deathMessage: HTMLElement = document.createElement("div");
+            document.body.appendChild(deathMessage);
+
             function clearScreen() {
               for (let y=0; y<10; ++y) {
                   for (let x=0; x<10; x++) {
@@ -24,7 +30,7 @@
               }
             };
 
-            function drawMapLine(line) { console.log(line) };
+            function drawMapLine(line: string) { console.log(line) };
             let map = ["|----------|",
                        "|          |",
                        "|          |",
@@ -56,7 +62,7 @@
               }
             };
 
-            function mapColour(x,y) {
+            function mapColour(x: number,y: number): string {
               if ((map[y][x] == "|") || (map[y][x] == "-")) {
                 return "#fff"
               } else if (map[y][x] == "&") {
@@ -78,15 +84,15 @@
               }
             };
 
-            function changeMap(x,y,symbol) {
+            function changeMap(x: number,y: number,symbol: string) {
               map[y]=changeLine(map[y],x,symbol)
             };
 
-            function changeLine(line,x,symbol) {
+            function changeLine(line: string,x: number,symbol: string) {
               return line.slice(0,x) + symbol + line.slice(x+1)
             };
 
-            function isFullLine(line) {
+            function isFullLine(line: string) {
               for (let i=0; i < line.length; ++i) {
                 if (line[i] == " ") {
                   return false
@@ -98,7 +104,7 @@
             var score = 0;
 
             function handleCompleteLines() {
-              for (i=1; i > 0 && i < (map.length - 1); ++i) {
+              for (let i = 1; i > 0 && i < (map.length - 1); ++i) {
                 if (isFullLine(map[i]) == true) {
                   moveLinesDown(i);
                   score = (score + 10)
@@ -106,28 +112,27 @@
               }
             };
 
-            function moveLinesDown(i) {
+            function moveLinesDown(i: number) {
               map.splice(i, 1);
               map.splice(1, 0, "|          |");
             };
 
             function scoreCounter() {
               // levels
-              const level = Math.floor(score/100) + 1;
-              document.getElementById("scoreboard").innerText = `Your score is ${score}`;
+              scoreboard.innerText = `Your score is ${score}`;
               //console.log(`Your score is ${score}`);
               //console.log(`You are at level ${level}`);
             };
 
-            function handleKeyUp(event) {
+            function handleKeyUp(event: KeyboardEvent) {
                 // console.debug(event);
                 return false
             }
             document.addEventListener('keyup', handleKeyUp);
 
-            function goodShapePosition(x, y, shape, map) {
-              for (i = 0; i < 4; i++) {
-                for (j = 0; j < 4; j++) {
+            function goodShapePosition(x: number, y:number, shape: string[], map: string[]) {
+              for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
                   if (shape[j][i] != " " && map[y+j][x+i] != " ") {
                     return false
                   }
@@ -136,15 +141,15 @@
               return true
             };
 
-            function drawTetromino(x,y,shape) {
+            function drawTetromino(x: number,y: number,shape: string[]) {
               if (goodShapePosition(x,y, shape, map)) {
                 pasteIntoMap(x,y,shape);
               }
             };
 
-            function pasteIntoMap(x,y,shape) {
-              for (i = 0; i < 4; i++) {
-                for (j = 0; j < 4; j++) {
+            function pasteIntoMap(x: number,y:number,shape: string[]) {
+              for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
                   if (shape[j][i] != " ") {
                     changeMap(x+i,y+j,shape[j][i]);
                   }
@@ -308,9 +313,9 @@
 
             let shapes = [theLShape, theNotLShape, theBar, theSquare, theUnZigZag, theZigZag, theTShape]
 
-            function destroyTetromino(x,y,shape) {
-              for (i = 0; i < 4; i++) {
-                for (j = 0; j < 4; j++) {
+            function destroyTetromino(x: number,y:number,shape: string[]) {
+              for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
                   if (shape[j][i] != " ") {
                     changeMap(x+i,y+j," ");
                   }
@@ -318,15 +323,15 @@
               }
             };
 
-            function getRandomInt(max) {
+            function getRandomInt(max: number) {
               return Math.floor(Math.random() * max);
             };
 
             document.addEventListener('keyup', handleKeyPress)
 
-            let pressedKey = null;
+            let pressedKey: string = '';
 
-            function handleKeyPress(event) {
+            function handleKeyPress(event: KeyboardEvent) {
               pressedKey = event.key;
 
               // immediately update the game when a key is pressed
@@ -335,7 +340,7 @@
 
             function getPressedKey() {
               let currentPressedKey = pressedKey
-              pressedKey = null
+              pressedKey = ''
               return currentPressedKey
 
             };
@@ -356,15 +361,8 @@
               timeoutHandler = setTimeout(updateMap, 500);
 
               if (dead == true) {
-                document.getElementById("deadmessage").innerText = "Congratulations! You are dead."
+                deathMessage.innerText = "Congratulations! You are dead."
               } else {
-                for (let y=0; y<10; ++y) {
-                    for (let x=0; x<10; x++) {
-                        let brightness = Math.sin(t+0.01*x*y);
-                        brightness = (255 * brightness * brightness).toFixed();
-                        tiles[y][x].style.backgroundColor = `rgb(${brightness},${brightness},${brightness})`;
-                    }
-                }
                 t += 0.1;
 
                 clearScreen();
