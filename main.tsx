@@ -11,7 +11,6 @@ function MyRootComponent(props: { children: string; myProperty: number }) {
   const [ counter1, setCounter1 ] = React.useState(0);
   const [ tasks, setTasks ] = React.useState<TaskType[]>([])
   const [ myInputValue, setMyInputValue ] = React.useState("");
-  const [ checkboxValue, setCheckboxValue ] = React.useState()
   const taskComponents = [];
   for (let task of tasks){
     taskComponents.push(<Task task={task} />);
@@ -38,7 +37,7 @@ return <>
 function Task(props: { task: TaskType }) {
   return <>
   <input type={'checkbox'} onChange={ (e) => checkboxValue(e.target.value) }></input>
-  <p>{props.name}</p>
+  <p>{props.task.label}</p>
   </>
 };
 
